@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AMSAT Tracker — Amateur Radio Satellite Tracker</title>
+  <link rel="stylesheet" href="vendor/leaflet/leaflet.css" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📡</text></svg>" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-icon">📡</span>
+      <div>
+        <h1>AMSAT Tracker</h1>
+        <p class="tagline">Live amateur-radio satellite tracking &amp; 10-day pass predictions</p>
+      </div>
+    </div>
+    <div class="key-area">
+      <label for="apiKey">N2YO API key</label>
+      <div class="key-row">
+        <input id="apiKey" type="password" placeholder="Paste your free N2YO key" autocomplete="off" spellcheck="false" />
+        <button id="toggleKey" class="btn ghost" type="button" title="Show / hide key">👁</button>
+        <button id="saveKey" class="btn" type="button">Save</button>
+      </div>
+      <span class="hint">Get a free key at <a href="https://www.n2yo.com/api/" target="_blank" rel="noopener">n2yo.com/api</a>. Stored only in your browser.</span>
+    </div>
+  </header>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <main class="layout">
+    <!-- Location -->
+    <section class="panel" id="locationPanel">
+      <h2>Home location</h2>
+      <div class="grid-3">
+        <label class="field">
+          <span>Latitude</span>
+          <input id="lat" type="number" step="0.000001" min="-90" max="90" placeholder="e.g. 51.5074" />
+        </label>
+        <label class="field">
+          <span>Longitude</span>
+          <input id="lng" type="number" step="0.000001" min="-180" max="180" placeholder="e.g. -0.1278" />
+        </label>
+        <label class="field">
+          <span>Altitude (m)</span>
+          <input id="alt" type="number" step="1" min="0" max="9000" placeholder="0" value="0" />
+        </label>
+      </div>
+      <div class="row">
+        <button id="geoBtn" class="btn" type="button">📍 Use my location</button>
+        <button id="saveLoc" class="btn primary" type="button">Save location</button>
+        <span id="locStatus" class="pill">No location saved</span>
+      </div>
+    </section>
+
+    <!-- Satellites -->
+    <section class="panel" id="satPanel">
+      <div class="panel-head">
+        <h2>Satellites</h2>
+        <div class="row">
+          <input id="satSearch" class="search" type="search" placeholder="Filter…" />
+          <button id="selectAll" class="btn ghost" type="button">All</button>
+          <button id="selectNone" class="btn ghost" type="button">None</button>
+        </div>
+      </div>
+      <ul id="satList" class="sat-list"></ul>
+      <p class="hint"><span id="selCount">0</span> selected · saved automatically</p>
+    </section>
+
+    <!-- Live tracking -->
+    <section class="panel" id="trackPanel">
+      <div class="panel-head">
+        <h2>Live tracking &amp; ground footprints</h2>
+        <div class="row">
+          <button id="trackToggle" class="btn primary" type="button" disabled>Start</button>
+          <button id="clearMap" class="btn ghost" type="button">Clear pass tracks</button>
+          <span id="trackStatus" class="pill">Idle</span>
+        </div>
+      </div>
+      <div id="map" class="map"></div>
+      <div class="table-wrap track-table">
+        <table id="trackTable">
+          <thead>
+            <tr><th>Satellite</th><th>Az</th><th>El</th><th>Alt km</th><th>Range km</th><th>Footprint km</th><th>Status</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="hint">Map shows each tracked satellite's sub-satellite point, its visibility footprint (0° horizon) and its ground track. Click the 🗺 button on a predicted pass to plot that pass.</p>
+    </section>
+
+    <!-- Pass predictions -->
+    <section class="panel" id="passPanel">
+      <div class="panel-head">
+        <h2>10-day pass predictions</h2>
+        <div class="row">
+          <label class="field inline">
+            <span>Min elevation</span>
+            <input id="minEl" type="number" min="0" max="90" step="1" value="0" />
+          </label>
+          <button id="passBtn" class="btn primary" type="button" disabled>Load predictions</button>
+          <span id="passStatus" class="pill">Idle</span>
+        </div>
+      </div>
+      <div id="passResults" class="pass-results">
+        <p class="hint">Select satellites above, then load predictions for the next 10 days.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>Data © <a href="https://www.n2yo.com/" target="_blank" rel="noopener">N2YO.com</a>. Built for amateur radio operators.</span>
+  </footer>
+
+  <script src="vendor/leaflet/leaflet.js"></script>
+  <script src="vendor/satellite.min.js"></script>
+  <script src="satellites.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

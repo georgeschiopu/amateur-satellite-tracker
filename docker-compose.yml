@@ -1,0 +1,8 @@
+services:
+  amsat-tracker:
+    build: .
+    image: amsat-tracker:latest
+    container_name: amsat-tracker
+    ports:
+      - "8585:8585"
+    restart: unless-stopped
